@@ -16,6 +16,33 @@ function routeChange(flightNumber) {
     document.getElementById('route').innerHTML = asRoutes[flightNumber];
 }
 
+function departureDateChange(carrier) {
+    const departureDate = document.getElementById('asdeparturedatepicker').value;
+    
+    console.log("date changed")
+    console.log(carrier)
+    console.log(buildUrl(carrier, document.getElementById('route').textContent, departureDate));
+}
+
+function buildUrl(carrier, route, departureDate) {
+    if (carrier === 'AS') {
+        const baseUrl = "https://www.alaskaair.com/search/results?";
+        const suffix = "&A=1&RT=false&ShoppingMethod=multicity";
+        const airports = route.split(">");
+        var airportsString = "";
+
+        for (var i = 0; i < airports.length-1; i++) {
+            if (i == 0) {
+                airportString += "O=" + airports[i] + "&D=" + airports[i+1] + "&OD=" + departureDate;
+            } else {
+                airportString += "&O" + (i+1) + "=" + airports[i] + "&D" + (i+1) + "=" + airports[i+1] + "&OD" + (i+1) + "=" + departureDate;
+            }
+        }
+
+        return baseUrl + airportsString + suffix;
+    }
+}
+
 // todo: dynamic time zone based on departure airport, is currently based off PST
 
 var minDate = new Date();

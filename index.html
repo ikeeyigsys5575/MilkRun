@@ -21,13 +21,13 @@
 
     <ul class="nav nav-tabs container p-1">
         <li class="nav-item">
-            <a class="nav-link active" data-bs-toggle="tab" href="#as">Alaska Milk Run</a>
+            <a class="nav-link active" id="as-tab" data-bs-toggle="tab" href="#as">Alaska Milk Run</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#ua">United Island Hopper</a>
+            <a class="nav-link" id="ua-tab" data-bs-toggle="tab" href="#ua">United Island Hopper</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#info">Info</a>
+            <a class="nav-link" id="info-tab" data-bs-toggle="tab" href="#info">Info</a>
         </li>
     </ul>
     <div class="tab-content container p-3">
@@ -63,7 +63,22 @@
 
             <div class="text-center p-3">
                 <label for="departuredate">Departure Date:</label>
-                <input type="date" id="asdeparturedatepicker" name="departuredate" onchange="departureDateChange()">
+                <input type="date" id="asdeparturedatepicker" name="departuredate" onchange="departureDateChange('AS')">
+            </div>
+
+            <div class="text-center p-3">
+                <input type="checkbox" id="asawardcheckbox" name="asawardcheck" onchange="departureDateChange('AS')">
+                <label for="asawardcheckbox">Search award bookings</label>
+            </div>
+            <div class="text-center p-3">
+
+                <button class="btn btn-primary" id="asdeparturebutton" onclick="departureButtonClick('AS')" disabled>
+                    <a href="#" id="asopenlink" class="text-white" target="_blank">View options on alaskaair.com</a>
+                </button>
+
+                <br>
+
+                <code id="aslinkbox" hidden>link</code>
             </div>
         </div>
         <div class="tab-pane fade" id="ua">

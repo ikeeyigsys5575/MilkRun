@@ -14,22 +14,38 @@ function routeChange(flightNumber) {
     console.log("routechange called with flightNumber: " + flightNumber);
 
     document.getElementById('route').innerHTML = asRoutes[flightNumber];
+
+    departureDateChange('AS');
 }
 
 function departureDateChange(carrier) {
     const departureDate = document.getElementById('asdeparturedatepicker').value;
     
-    console.log("date changed")
-    console.log(carrier)
-    console.log(buildUrl(carrier, document.getElementById('route').textContent, departureDate));
+    if (!departureDate) {
+        console.error("No departure date selected.");
+        return;
+    }
+
+    console.log(carrier);
+    const award = document.getElementById('asawardcheckbox').checked;
+
+    var bookingLink = buildUrl(carrier, document.getElementById('route').textContent, departureDate, award);
+
+    document.getElementById('asopenlink').href = bookingLink;
+    document.getElementById('asdeparturebutton').disabled = false;
+
+    document.getElementById('aslinkbox').textContent = bookingLink;
+    document.getElementById('aslinkbox').hidden = false;
+
 }
 
-function buildUrl(carrier, route, departureDate) {
-    if (carrier === 'AS') {
+function buildUrl(carrier, route, departureDate, award) {
+    if (carrier == 'AS') {
         const baseUrl = "https://www.alaskaair.com/search/results?";
         const suffix = "&A=1&RT=false&ShoppingMethod=multicity";
         const airports = route.split(">");
-        var airportsString = "";
+        
+        var airportString = "";
 
         for (var i = 0; i < airports.length-1; i++) {
             if (i == 0) {
@@ -39,7 +55,11 @@ function buildUrl(carrier, route, departureDate) {
             }
         }
 
-        return baseUrl + airportsString + suffix;
+        if (award) {
+            airportString += "&RequestType=AwardMatrix";
+        }
+
+        return baseUrl + airportString + suffix;
     }
 }
 
@@ -50,3 +70,9 @@ const offset = minDate.getTimezoneOffset();
 minDate = new Date(minDate.getTime() - (offset*60*1000) - (8*60*60*1000));
 
 document.getElementById('asdeparturedatepicker').setAttribute('min', minDate.toISOString().split('T')[0]);
+
+if (document.getElementById('as-tab').checked) { 
+    departureDateChange('AS');
+} else if (document.getElementById('ua-tab').checked) {
+    departureDateChange('UA');
+}

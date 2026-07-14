@@ -44,6 +44,7 @@ function buildUrl(carrier, route, departureDate, award) {
         const baseUrl = "https://www.alaskaair.com/search/results?";
         const suffix = "&A=1&RT=false&ShoppingMethod=multicity";
         const airports = route.split(">");
+        const segmentWarningElement = document.getElementById('segmentwarning');
         
         var airportString = "";
 
@@ -59,6 +60,12 @@ function buildUrl(carrier, route, departureDate, award) {
             airportString += "&RequestType=AwardMatrix";
         }
 
+        if (airports.length > 5) {
+            segmentWarningElement.textContent = `Alaska only allows bookings of up to 4 segments. The segment ${airports[4]} to ${airports[5]} will be ommitted.`;
+        } else {
+            segmentWarningElement.textContent = " ";
+        }
+
         return baseUrl + airportString + suffix;
     }
 }
@@ -71,8 +78,9 @@ minDate = new Date(minDate.getTime() - (offset*60*1000) - (8*60*60*1000));
 
 document.getElementById('asdeparturedatepicker').setAttribute('min', minDate.toISOString().split('T')[0]);
 
-if (document.getElementById('as-tab').checked) { 
+if (document.getElementById('as-tab').classList.contains('active')) { 
+    console.log("AS tab is checked");
     departureDateChange('AS');
-} else if (document.getElementById('ua-tab').checked) {
+} else if (document.getElementById('ua-tab').classList.contains('active')) {
     departureDateChange('UA');
 }

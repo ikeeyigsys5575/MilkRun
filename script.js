@@ -96,6 +96,7 @@ function saveLink(carrier) {
 
 function loadSaves(carrier) {
     if (carrier == 'AS') {
+        document.getElementById('ascardcontainer').innerHTML = "";
         for (var i = 0; i < asSaveCount; i++) {
             const link = localStorage.getItem(`asSaveLink${i}`);
             const date = localStorage.getItem(`asSaveDate${i}`);

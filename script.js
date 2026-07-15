@@ -65,7 +65,7 @@ function buildUrl(carrier, route, departureDate, award) {
         }
 
         if (airports.length > 5) {
-            segmentWarningElement.textContent = `Alaska only allows bookings of up to 4 segments. The segment ${airports[4]} to ${airports[5]} will be ommitted.`;
+            segmentWarningElement.textContent = `Alaska only allows bookings of up to 4 segments. The segment ${airports[4]} to ${airports[5]} will be omitted.`;
         } else {
             segmentWarningElement.textContent = " ";
         }
@@ -85,6 +85,7 @@ function saveLink(carrier) {
         localStorage.setItem(`asSaveLink${asSaveCount}`, document.getElementById('aslinkbox').textContent);
         localStorage.setItem(`asSaveDate${asSaveCount}`, document.getElementById('asdeparturedatepicker').value);
         localStorage.setItem(`asSaveRoute${asSaveCount}`, document.getElementById('route').textContent);
+        localStorage.setItem(`asSaveAward${asSaveCount}`, document.getElementById('asawardcheckbox').checked);
 
         asSaveCount++;
 
@@ -101,16 +102,29 @@ function loadSaves(carrier) {
             const link = localStorage.getItem(`asSaveLink${i}`);
             const date = localStorage.getItem(`asSaveDate${i}`);
             const route = localStorage.getItem(`asSaveRoute${i}`);
-            document.getElementById('ascardcontainer').innerHTML += createCard(link, date, route);
+            const award = localStorage.getItem(`asSaveAward${i}`);
+            document.getElementById('ascardcontainer').innerHTML += createCard(link, date, route, award);
         }
     }
 }
 
-function createCard(link, date, route) {
+function createCard(link, date, route, award) {
+
+    if (award === 'true') {
+        route += " (Award)";
+    }
+
+    var segmentWarningElement = ``;
+
+    if (route.split(">").length > 5) {
+        segmentWarningElement = `<p class="text-warning">Alaska only allows bookings of up to 4 segments. The last segment will be omitted</p>`;
+    }
+
     return `<div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">${route}</h5>
                     <p class="card-text">${date}</p>
+                    ${segmentWarningElement}
                     <a href="${link}" class="btn btn-primary float-end" target="_blank">View options</a>
                 </div>
             </div>`;

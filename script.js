@@ -8,7 +8,7 @@ const asRoutes = {
     as67: "SEA>KTN>SIT>JNU>ANC"
 }
 
-
+var asSaveCount = 0;
 
 function routeChange(flightNumber) {
     console.log("routechange called with flightNumber: " + flightNumber);
@@ -36,6 +36,10 @@ function departureDateChange(carrier) {
 
     document.getElementById('aslinkbox').textContent = bookingLink;
     document.getElementById('aslinkbox').hidden = false;
+
+    if (typeof(Storage) !== "undefined") {
+        document.getElementById('assavelinkbutton').hidden = false;
+    }
 
 }
 
@@ -70,6 +74,18 @@ function buildUrl(carrier, route, departureDate, award) {
     }
 }
 
+function saveLink(carrier) {
+    if (carrier == 'AS') {
+        localStorage.setItem(`asSaveLink${asSaveCount}`, document.getElementById('aslinkbox').textContent);
+        localStorage.setItem(`asSaveDate${asSaveCount}`, document.getElementById('asdeparturedatepicker').value);
+        localStorage.setItem(`asSaveRoute${asSaveCount}`, document.getElementById('route').textContent);
+        
+        asSaveCount++;
+        
+        localStorage.setItem("asSaveCount", asSaveCount);
+    }
+}
+
 // todo: dynamic time zone based on departure airport, is currently based off PST
 
 var minDate = new Date();
@@ -77,6 +93,17 @@ const offset = minDate.getTimezoneOffset();
 minDate = new Date(minDate.getTime() - (offset*60*1000) - (8*60*60*1000));
 
 document.getElementById('asdeparturedatepicker').setAttribute('min', minDate.toISOString().split('T')[0]);
+
+if (typeof(Storage) !== "undefined") {
+    if (localStorage.getItem("asSaveCount")) {
+        asSaveCount = parseInt(localStorage.getItem("asSaveCount"));
+    } else {
+        localStorage.setItem("asSaveCount", asSaveCount);
+    }
+
+    console.log(asSaveCount);
+}
+
 
 if (document.getElementById('as-tab').classList.contains('active')) { 
     console.log("AS tab is checked");
